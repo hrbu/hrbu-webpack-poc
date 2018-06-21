@@ -18,6 +18,7 @@ We use `webpack` the following way:
 - [ ] Generate `/webpack.config.js`
 - [ ] Generate `/<elementary>/webpack.config.js`
 - [ ] Generate `/<compound>/webpack.config.js`
+- [ ] Modify elementary scaffolding (refer to `bundle.js`)
 
 ## Other TODOs
 - [ ] Introduce a `/src` folder and rename `/_dist` to `/dist` (webpacks default name for the dist folder)
