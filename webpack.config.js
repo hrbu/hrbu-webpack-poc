@@ -3,33 +3,38 @@
  * @see https://hackernoon.com/webpack-3-quickstarter-configure-webpack-from-scratch-30a6c394038a
  */
 "use strict";
+const find = require('find');
 const path = require('path');
-const webpack = require('webpack'); //to access built-in plugins
 
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const distFolder = path.resolve(__dirname, '_dist');
+global.cubx = {
+    distFolder: path.resolve(__dirname, '_dist'),
+    distFolderWebpackage: path.resolve(__dirname, '_dist', __dirname.split(path.sep).pop())
+}
 
 const baseConfig = {
     context: path.resolve(__dirname),
-    // 'entry' is defined only to set the default source path to '.' (default is 'src')
+    // 'entry' is defined only as we have to set the default source path to '.' (default is 'src')
+    // TODO: move artifact folders into a 'src' subdirectory
     entry: './package.json',
     // 'output' is defined only as we have to define an input
     output: {
-        path: distFolder,
+        path: global.cubx.distFolderWebpackage,
         filename: 'package.js'
     },
 
     plugins: [
-        new CleanWebpackPlugin([distFolder]),
+        new CleanWebpackPlugin([global.cubx.distFolderWebpackage]),
         new CopyWebpackPlugin([
             {
                 from: path.resolve(__dirname),
-                to: distFolder,
+                to: global.cubx.distFolderWebpackage,
                 ignore: [
+                    '.git/**/*',
                     'node_modules/**/*',
-                    `${distFolder}/**/*`]
+                    `${global.cubx.distFolder}/**/*`]
             },
         ], {}),
     ],
@@ -40,17 +45,17 @@ const baseConfig = {
      * 
      * Official docs: @see https://webpack.js.org/configuration/dev-server/
      */
-    devServer: {
-        contentBase: path.resolve(__dirname, `./${distFolder}/assets/media`),
-        compress: true,
-        port: 12000,
-        stats: 'errors-only',
-        open: true,
-        overlay: {
-            warnings: true,
-            errors: true
-        }
-    },
+    // devServer: {
+    //     contentBase: path.resolve(__dirname, `./${global.cubx.distFolder}/assets/media`),
+    //     compress: true,
+    //     port: 12000,
+    //     stats: 'errors-only',
+    //     open: true,
+    //     overlay: {
+    //         warnings: true,
+    //         errors: true
+    //     }
+    // },
     /**
      * This option controls if and how source maps are generated. 
      * With this feature, we know exactly where to look in order to fix/debug issues in our application. 
@@ -68,7 +73,49 @@ const baseConfig = {
     }
 }
 
-const configApp = require('./webpack.config.app');
-const configElementary1 = require('./webpack.config.elementary1');
-module.exports = [baseConfig, configApp, configElementary1];
+// collect webpack configuration of artifacts
+const artifactConfigs = [baseConfig];
+const subConfigs = resolveSubConfigs([path.resolve(__dirname, global.cubx.distFolder), path.resolve(__dirname, 'node_modules')]);
+subConfigs.forEach(subConfig => {
+    console.log(`Loading subconfig "${subConfig}" ...`)
+    artifactConfigs.push(require(subConfig))
+});
+module.exports = artifactConfigs;
+
+
+/**
+ * 
+ * @param [] ignorePathsArray 
+ */
+function resolveSubConfigs(ignorePathsArray) {
+    const files = find.fileSync(/webpack\.config.js$/, __dirname);
+    const relevantFiles = [];
+    files.forEach(file => {
+        let ignoreFile = false;
+        ignorePathsArray.forEach(ignorePath => {
+            // ignore file on webpackage root level
+            if (file === path.resolve(__dirname, 'webpack.config.js')) {
+                ignoreFile = true;
+                return;
+            }
+            // ignore files within one of the passed paths to be ignored
+            if (file.startsWith(ignorePath)) {
+                ignoreFile = true;
+                return;
+            }
+        })
+        if (!ignoreFile) {
+            relevantFiles.push(file);
+        }
+    })
+    const subConfigs = [];
+    relevantFiles.forEach(file => {
+        const filePathElements = file.split(path.sep);
+        const fileName = filePathElements.pop(); // just the file itself
+        const folder = filePathElements.pop()
+        subConfigs.push(`./${folder}/${fileName}`);
+
+    });
+    return subConfigs;
+}
 
