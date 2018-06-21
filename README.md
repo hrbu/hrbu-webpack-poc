@@ -18,3 +18,6 @@ We use `webpack` the following way:
 - [ ] Generate `/webpack.config.js`
 - [ ] Generate `/<elementary>/webpack.config.js`
 - [ ] Generate `/<compound>/webpack.config.js`
+
+## Other TODOs
+- [ ] Introduce a `/src` folder and rename `/_dist` to `/dist` (webpacks default name for the dist folder)
