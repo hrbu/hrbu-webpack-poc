@@ -1,0 +1,36 @@
+{
+  "name": "hrbu-generator-dev",
+  "groupId": "",
+  "version": "1.0.0",
+  "modelVersion": "10.0.0",
+  "docType": "webpackage",
+  "author": {
+    "name": "Hd Böhlau",
+    "email": "hrbu@incowia.com"
+  },
+  "license": "ISC",
+  "keywords": [],
+  "man": [],
+  "artifacts": {
+    "apps": [],
+    "elementaryComponents": [
+      {
+        "artifactId": "hrbu-generator-dev-elem1",
+        "description": "Evaluation element",
+        "runnables": [],
+        "slots": [],
+        "resources": [
+          "element.html"
+        ],
+        "dependencies": [
+          {
+            "webpackageId": "cubx.core.rte@3.0.0-SNAPSHOT",
+            "artifactId": "cubxcomponent"
+          }
+        ]
+      }
+    ],
+    "compoundComponents": [],
+    "utilities": []
+  }
+}

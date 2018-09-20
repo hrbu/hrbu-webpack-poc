@@ -1,4 +1,5 @@
-.section {
+/* Place your css here. */
+:local(.section) {
     background-color: blue;
     color: white;
     font-size: 20px;
