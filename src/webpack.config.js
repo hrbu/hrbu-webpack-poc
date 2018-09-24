@@ -4,8 +4,11 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
+const ExtraWatchWebpackPlugin = require('extra-watch-webpack-plugin');
 const webpackage = require('./manifest.webpackage');
+const packageScripts = require('../package-scripts');
 const distFolder = path.resolve(__dirname, '../dist', webpackage.name);
+const rootFolder = path.resolve(__dirname, '..');
 
 global.cubx = {
     distFolder,
@@ -17,6 +20,7 @@ const baseConfig = {
     context: path.resolve(__dirname),
     // define the entry module for the bundle to be created
     entry: `./main.js`,
+    //entry: `./../package-scripts.js`,
     output: {
         path: global.cubx.distFolderWebpackage
     },
@@ -29,7 +33,8 @@ const baseConfig = {
             inject: 'body',
             // manage placeholders
             templateParameters: {
-                webpackageName: `${webpackage.name}`
+                webpackageName: `${webpackage.name}`,
+                artifactIndex: `${packageScripts.artifactIndex()}`
             },
         }),
         new GenerateJsonPlugin('manifest.webpackage', require('./manifest.webpackage.js'), null, 2)

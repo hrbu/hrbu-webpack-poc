@@ -1,5 +1,5 @@
 {
-  "name": "hrbu-generator-dev",
+  "name": "hrbu-generator-poc",
   "version": "1.0.0",
   "description": "Test the generator",
   "main": "\"\"",
@@ -8,13 +8,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "upload:dev": "cubx-webpackage-uploader ./cubx-uploader-config.dev.json",
     "build": "npm-run-all --serial clean \"webpack -- -d --config src/webpack.config.js\"",
+    "build:watch": "npm-run-all --serial \"webpack -- -d --config src/webpack.config.js --watch\"",
     "build:prod": "npm-run-all --serial clean \"webpack -- -p --config src/webpack.config.js\"",
     "start": "npm-run-all --parallel serve open",
-    "start:watch": "npm-run-all --parallel watch serve open",
+    "start:watch": "npm-run-all --parallel build:watch serve open",
     "serve": "light-server -s dist --proxy https://cubbles.world/sandbox -w \"dist/**\"",
-    "webpack": "./node_modules/.bin/webpack",
-    "open": "run-func package-scripts.js open",
-    "watch": "npm-run-all --serial \"webpack -- -d --config src/webpack.config.js --watch\""
+    "webpack": "webpack",
+    "open": "run-func package-scripts.js open"
   },
   "author": "boehlau@getrequest.de",
   "license": "ISC",
@@ -25,6 +25,7 @@
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.11",
     "cubx-webpackage-uploader": "^3.3.4",
+    "extra-watch-webpack-plugin": "^1.0.3",
     "find": "^0.2.9",
     "generate-json-webpack-plugin": "^0.3.1",
     "html-loader": "^0.5.5",
@@ -40,5 +41,17 @@
     "webpack": "^4.12.0",
     "webpack-cli": "^3.0.3",
     "yo": "^2.0.3"
-  }
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hrbu/hrbu-webpack-poc.git"
+  },
+  "keywords": [
+    "new"
+  ],
+  "bugs": {
+    "url": "https://github.com/hrbu/hrbu-webpack-poc/issues"
+  },
+  "homepage": "https://github.com/hrbu/hrbu-webpack-poc#readme"
 }

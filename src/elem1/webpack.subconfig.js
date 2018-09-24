@@ -41,12 +41,21 @@ const config = {
     },
     plugins: [
         new CopyWebpackPlugin([
-            { from: 'README.md', to: 'README.md',},
+            { from: 'README.md', to: 'README.md'},
         ], {}),
         new HtmlWebpackPlugin({
             template: 'element.html',
             inject: 'body',
             filename: 'element.html',
+            // manage placeholders
+            templateParameters: {
+                elementName: `${elementName}`
+            },
+        }),
+        new HtmlWebpackPlugin({
+            template: 'showroom.html',
+            inject: 'body',
+            filename: 'showroom.html',
             // manage placeholders
             templateParameters: {
                 elementName: `${elementName}`
